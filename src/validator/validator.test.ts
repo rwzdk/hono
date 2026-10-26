@@ -215,6 +215,43 @@ describe('JSON', () => {
     expect(await res.json()).toEqual({ foo: 'bar' })
   })
 
+  it('Should validate if Content-Type is a subtype containing digits like application/vnd.github.v3+json', async () => {
+    const res = await app.request('http://localhost/post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/vnd.github.v3+json',
+      },
+      body: JSON.stringify({ foo: 'bar' }),
+    })
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ foo: 'bar' })
+  })
+
+  it('Should validate if Content-Type is application/ld+json with a parameter', async () => {
+    const res = await app.request('http://localhost/post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/ld+json; charset=utf-8',
+      },
+      body: JSON.stringify({ foo: 'bar' }),
+    })
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ foo: 'bar' })
+  })
+
+  it('Should not validate if Content-Type is a non-JSON subtype like application/vnd.api+xml', async () => {
+    const res = await app.request('http://localhost/post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/vnd.api+xml',
+      },
+      body: JSON.stringify({ foo: 'bar' }),
+    })
+    expect(res.status).toBe(200)
+    const data = await res.json()
+    expect(data.foo).toBeUndefined()
+  })
+
   it('Should not validate if Content-Type does not start with application/json', async () => {
     const res = await app.request('http://localhost/post', {
       method: 'POST',
