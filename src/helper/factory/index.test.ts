@@ -356,6 +356,31 @@ describe('createHandler', () => {
       expectTypeOf<Handler1Output>().toEqualTypeOf<{ first: number }>()
       expectTypeOf<Handler2Output>().toEqualTypeOf<{ second: 'second' }>()
     })
+
+    it('Should allow nine handlers with independent return types', () => {
+      const [handler1, handler2, handler3, handler4, handler5, handler6, handler7, handler8, handler9] =
+        factory.createHandlers(
+          (c) => c.json({ first: 1 }),
+          (c) => c.json({ second: 2 }),
+          (c) => c.json({ third: 3 }),
+          (c) => c.json({ fourth: 4 }),
+          (c) => c.json({ fifth: 5 }),
+          (c) => c.json({ sixth: 6 }),
+          (c) => c.json({ seventh: 7 }),
+          (c) => c.json({ eighth: 8 }),
+          (c) => c.json({ ninth: 9 })
+        )
+
+      expectTypeOf<ExtractOutput<typeof handler1>>().toEqualTypeOf<{ first: number }>()
+      expectTypeOf<ExtractOutput<typeof handler2>>().toEqualTypeOf<{ second: number }>()
+      expectTypeOf<ExtractOutput<typeof handler3>>().toEqualTypeOf<{ third: number }>()
+      expectTypeOf<ExtractOutput<typeof handler4>>().toEqualTypeOf<{ fourth: number }>()
+      expectTypeOf<ExtractOutput<typeof handler5>>().toEqualTypeOf<{ fifth: number }>()
+      expectTypeOf<ExtractOutput<typeof handler6>>().toEqualTypeOf<{ sixth: number }>()
+      expectTypeOf<ExtractOutput<typeof handler7>>().toEqualTypeOf<{ seventh: number }>()
+      expectTypeOf<ExtractOutput<typeof handler8>>().toEqualTypeOf<{ eighth: number }>()
+      expectTypeOf<ExtractOutput<typeof handler9>>().toEqualTypeOf<{ ninth: number }>()
+    })
   })
 })
 
